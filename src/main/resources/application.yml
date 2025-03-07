@@ -1,0 +1,28 @@
+server:
+  shutdown: graceful
+
+spring:
+  # 기본 application.yml 외에도 application-rds.yml, application-logback.yml의 설정이 추가
+  profiles:
+    include: rds, logback
+  # 다른 설정 파일(rds.yml, logback.yml)에서 동일한 Bean을 정의할 경우 충돌을 방지하기 위해 사용
+  main:
+    allow-bean-definition-overriding: true
+  # Spring Batch의 기본 테이블(BATCH_JOB_INSTANCE, BATCH_STEP_EXECUTION 등)을 자동으로 생성하지 않도록 설정
+  batch:
+    jdbc:
+      initialize-schema: embedded
+    # batch job 이름을 동적으로 설정.
+    # ${job.name} 값이 주어지지 않으면 기본값 NONE 사용
+    # Spring Boot 실행 시 --job.name=myJob 형태로 실행 가능
+    names: ${job.name:NONE}
+    # 애플리케이션이 실행될 때 배치 작업이 자동 실행되지 않음
+    enabled: false
+
+mybatis:
+  mapper-locations:
+    - classpath:mybatis/moa-batch/**/*.xml
+  type-aliases-package: dev.indie.**.models.entities, dev.indie.**.models.selectors, dev.indie.**.models.updaters
+  check-config-location: on
+  configuration:
+    map-underscore-to-camel-case: on

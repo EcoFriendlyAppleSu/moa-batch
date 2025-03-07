@@ -1,10 +1,14 @@
-package dev.indie.moa.batch
+package dev.indie.app.moa.batch
 
+import org.mybatis.spring.annotation.MapperScan
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
+@MapperScan(basePackages = [
+    "dev.indie.**.infrastructures.mappers"
+])
 @SpringBootApplication(scanBasePackages = [
-    "dev.indie.moa.batch"
+    "dev.indie.app.moa"
 ])
 class MoaBatchApplication
 

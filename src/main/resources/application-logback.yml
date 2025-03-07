@@ -1,0 +1,39 @@
+# 사용하면 환경에 따라 다른 로그 설정을 적용
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    ch:
+      qos:
+        logback: OFF # logback 자체의 내부 로깅 비활성화
+
+log4jdbc:
+  auto:
+    load:
+      popular:
+        drivers: false
+  drivers:
+    com.mysql.cj.jdbc.Driver
+  dump:
+    sql:
+      addsemicolon: true # SQL 로그 출력 시 세미콜론(;)을 추가하여 쿼리 형태를 명확하게 표시
+      maxlinelength: 0 # 긴 SQL 쿼리도 한 줄로 표시됨
+  trim:
+    sql:
+      extrablanklines: false # SQL 로그에서 불필요한 빈 줄(Blank Line)을 제거하지 않음(false)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+logging:
+  pattern:
+    file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  level:
+    org:
+      springframework: INFO
+  logback:
+    rolling policy:
+      file-name-pattern: "${LOGGING_PATH:.}/logs/${batch_id}/moa-batch.%d{yyyy-MM-dd}.%i"
+      max-history: 30
